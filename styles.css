@@ -5,13 +5,74 @@ body {
   padding: 1rem;
 }
 h1 { text-align: center; }
-.field { margin-bottom: 1rem; min-height: 3.6rem; }
-label { display: inline-block; width: 120px; font-weight: bold; }
+.field {
+  display: grid;
+  grid-template-columns: var(--label-width) 1fr; /* 固定 label 寬度、controls 伸縮 */
+  align-items: center; /* 水平列置中對齊（input 與 label 垂直置中） */
+  gap: var(--gap);
+  margin-bottom: 14px;
+}
+label {
+  width: var(--label-width);
+  font-weight: 600;
+  padding: 0;
+  line-height: normal;
+  color: #333;
+  display: inline-flex;
+  align-items: center;
+  height: 44px; /* 與 input 高度一致，確保對齊 */
+}
 span, p { display: inline-block; width: calc(100% - 130px); margin: 0; }
-select, input, textarea { width: calc(100% - 130px); margin: 0; box-sizing: border-box; }
-textarea { height: 1000px; width: 100%; max-width: 100%; }
-.status { margin-top: 1rem; color: #555; font-size: 0.9rem; }
-button { padding: 0.5rem 1rem; font-size: 1rem; margin-right: 0.5rem; }
+select, input[type="text"], textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d0d7df;
+  border-radius: 6px;
+  background: #fff;
+  box-sizing: border-box;
+  font-size: 0.95rem;
+  height: 44px; /* 統一高度 */
+}
+textarea {
+  width: 100%;
+  min-height: 360px;
+  resize: vertical;
+  padding: 12px;
+  border: 1px solid #d0d7df;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 0.95rem;
+  align-self: start; /* 讓 textarea 頂端與 label 頂端對齊 */
+}
+.controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.hidden{ display: none; }
+.status { margin-top: 12px; color: #666; font-size: 0.92rem; }
+button {
+  background: #f0f0f0;            /* 灰色底 */
+  color: #000;                    /* 黑色文字 */
+  border: 1px solid #cfcfcf;      /* 淺灰邊框 */
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin: 0 6px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: none;
+}
+button:hover:not([disabled]) {
+  background: #e6e6e6;            /* 滑鼠經過稍深一點 */
+}
+
+/* disabled 保持淡化但仍有邊框 */
+button[disabled]{
+  opacity: 0.7;
+  cursor: not-allowed;
+  background: #f5f5f5;
+  border-color: #e0e0e0;
+}
 
 /* Modal 樣式 */
 .modal {
@@ -26,19 +87,94 @@ button { padding: 0.5rem 1rem; font-size: 1rem; margin-right: 0.5rem; }
   background-color: rgba(0,0,0,0.4);
 }
 .modal-content {
+  position: relative;        /* 容器為相對定位，讓 close-btn 可絕對定位 */
   background: #fff;
   margin: 5% auto;
-  padding: 20px;
+  padding: 18px 20px 20px;   /* 減少上方 padding，並讓按鈕靠近上邊緣 */
   border-radius: 8px;
   max-width: 700px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
-.close-btn { float: right; font-size: 24px; cursor: pointer; color: #aaa; }
 
-/* 表格樣式 */
+/* close 按鈕改為明確大小與絕對定位到 modal-content 的右上角 */
+.close-btn {
+  position: absolute;
+  top: 8px;                 /* 距離 modal-content 上方邊緣 */
+  right: 8px;               /* 距離 modal-content 右側邊緣 */
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  line-height: 1;
+  z-index: 5;               /* 確保在內容之上 */
+}
+.close-btn:hover {
+  background: rgba(0,0,0,0.04);
+  color: #333;
+}
+
+/* modal 內標題保留一行，但用 padding-right 留出按鈕空間（避免重疊） */
+.modal-content h2 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 48px; /* 為右上角的關閉按鈕保留安全空間 */
+  margin: 0 0 8px 0;
+}
+
 table { width: 100%; border-collapse: collapse; margin-bottom: 1em; }
 th, td { border: 1px solid #000; padding: 8px; text-align: left; }
 th { background: #f5f5f5; }
 
 h2, h3 { margin-top: 1em; }
 ul, ol { margin-left: 1.5em; }
+
+/* 響應式：小螢幕時改為堆疊，label 置頂 */
+@media (max-width: 640px){
+  .field{
+    grid-template-columns: 1fr; /* 單欄堆疊 */
+    align-items: stretch;
+  }
+  .field label{
+    width: auto;
+    height: auto;
+    padding-bottom: 6px;
+  }
+  .controls{ flex-direction: column; gap: 10px; }
+  textarea{ min-height: 260px; }
+}
+
+/* 新增 .actions 佈局與響應式規則 */
+.actions{
+  display: flex;
+  justify-content: space-between; /* 左右兩端對齊 */
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+/* 底下按鈕文字為黑色（僅影響 .actions 內的按鈕） */
+.actions button {
+  color: #000;
+  background: #f0f0f0;
+  border: 1px solid #cfcfcf;
+}
+
+/* 小螢幕時把按鈕垂直堆疊，維持可用性 */
+@media (max-width: 640px) {
+  .actions{
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .actions button{
+    width: 100%;
+    margin: 6px 0;
+  }
+}
