@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>線上考卷-Age&Viewing_Habits</title>
+  <style>
+    body { max-width: 800px; margin: 0 auto; font-family: sans-serif; padding: 1rem; }
+    h1 { text-align: center; }
+    .field { margin-bottom: 1rem; }
+    label { display: inline-block; width: 80px; font-weight: bold; }
+    span, p { display: inline-block; width: calc(100% - 90px); margin: 0; }
+    select, input, textarea { width: calc(100% - 90px); margin: 0; }
+    textarea { height: 800px; width: 800px; }
+    .status { margin-top: 1rem; color: #555; font-size: 0.9rem; }
+    button { padding: 0.5rem 1rem; font-size: 1rem; margin-right: 0.5rem; }
+    /* Modal 樣式 */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 8px;
+    }
+    .close-btn {
+      color: #aaa;
+      float: right;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+	body { max-width: 800px; margin: 0 auto; font-family: sans-serif; padding: 1rem; }
+    h1 { text-align: center; }
+    .field { margin-bottom: 1rem; }
+    label { display: inline-block; width: 80px; font-weight: bold; }
+    select, input, textarea { width: calc(100% - 90px); }
+    button { padding: 0.5rem 1rem; font-size: 1rem; margin-right: 0.5rem; }
+    .status { margin-top: 1rem; color: #555; font-size: 0.9rem; }
+    /* Modal */
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); }
+    .modal-content { background: #fff; margin: 5% auto; padding: 20px; border-radius: 8px; max-width: 700px; }
+    .close-btn { float: right; font-size: 24px; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 1em; }
+    th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+    th { background: #f5f5f5; }
+    h2, h3 { margin-top: 1em; }
+    ul, ol { margin-left: 1.5em; }
+  </style>
+</head>
+<body>
+  <h1>Age and Viewing Habits 考卷</h1>
+
+  <div class="field">
+    <label for="cls">班級：</label><br>
+    <select id="cls">
+      <option value="">請選擇班級</option>
+      <option value="financial">中央財金</option>
+      <option value="economic">中央經濟</option>
+      <option value="enterprise">中原企管</option>
+      <option value="other">other</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="name">姓名：</label>
+    <input type="text" id="name" placeholder="請填寫姓名">
+  </div>
+  <div class="field">
+    <label for="sid">學號：</label>
+    <input type="text" id="sid" placeholder="請填寫學號" pattern="\d+">
+  </div>
+
+  <hr>
+
+  <div class="field">
+    <label>作答區：</label>
+    <textarea id="ans1" placeholder="請在此作答"></textarea>
+  </div>
+
+  <div style="text-align:center; margin-top:2rem;">
+    <button id="instructionsBtn">作答注意事項</button>
+    <button id="downloadExamBtn" disabled>下載考卷（含答案）</button>
+  </div>
+  <div class="status" id="status">尚未儲存</div>
+
+
+<!-- 注意事項 Modal -->
+  <div id="instructionsModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeModal">&times;</span>
+      <h2>express key point</h2>
+      <h3>📐 文字描述公式的原則</h3>
+      <table>
+        <tr><th>類型</th><th>替代方式</th><th>範例</th></tr>
+        <tr><td>等號</td><td>用 = 表示</td><td>mean = 5</td></tr>
+        <tr><td>不等號</td><td>用 &lt;=, &gt;=, &lt;, &gt;</td><td>P(0.45 <= p-hat <= 0.49)</td></tr>
+        <tr><td>分數</td><td>用 / 表示除法</td><td>standard deviation = sqrt( p × (1 - p) / n )</td></tr>
+        <tr><td>次方</td><td>用 ^ 或 sqrt()</td><td>z = (p-hat - p) / sqrt( p × (1 - p) / n )</td></tr>
+        <tr><td>符號拼音</td><td>用單字拼寫</td><td>μ → “mu”, σ → “sigma”, x̄ → “x-bar”, p̂ → “p-hat”</td></tr>
+      </table>
+      <h3>🧠 符號拼音對照表</h3>
+      <table>
+        <tr><th>符號</th><th>文字拼音寫法</th><th>說明</th></tr>
+        <tr><td>x̄</td><td>x-bar</td><td>樣本平均</td></tr>
+        <tr><td>μ</td><td>mu</td><td>母體平均</td></tr>
+        <tr><td>σ</td><td>sigma</td><td>母體標準差</td></tr>
+        <tr><td>σₓ̄</td><td>sigma of x-bar</td><td>樣本平均的標準差</td></tr>
+        <tr><td>p̂</td><td>p-hat</td><td>樣本比例</td></tr>
+        <tr><td>n</td><td>n</td><td>樣本數</td></tr>
+        <tr><td>z</td><td>z</td><td>z 分數</td></tr>
+        <tr><td>P(...)</td><td>P(...)</td><td>機率表示法</td></tr>
+      </table>
+      <h3>🔍 LaTeX 常見範例</h3>
+      <table>
+        <tr><th>數學表達</th><th>LaTeX 語法</th><th>顯示效果</th></tr>
+        <tr><td>分數</td><td>\frac{1}{2}</td><td>½</td></tr>
+        <tr><td>平方根</td><td>\sqrt{9}</td><td>√9</td></tr>
+        <tr><td>次方</td><td>x^2</td><td>x²</td></tr>
+        <tr><td>希臘字母</td><td>\mu, \sigma</td><td>μ, σ</td></tr>
+        <tr><td>機率</td><td>P(0.45 \leq \hat{p} \leq 0.49)</td><td>P(0.45 ≤ p̂ ≤ 0.49)</td></tr>
+      </table>
+      <h3>🎉 very important</h3>
+      <p style="color:red;">儘量不要使用 LaTeX 語法，不要貼圖片或手寫公式，最終請按下載檔案,上傳到eclass</p>
+      <h3>📌 數學算式請用文字方式寫出：</h3>
+      <ol>
+        <li>所有變數請用英文拼音（如 x-bar, p-hat, sigma, mu 等）</li>
+        <li>分數請用 `/` 代表除法；平方根用 `sqrt(...)`</li>
+        <li>所有計算過程都要寫出來（不要直接給出結果）</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    const examId = document.title.replace(/[^\w]/g, '_');
+    const clsInp = document.getElementById('cls');
+    const nameInp = document.getElementById('name');
+    const sidInp = document.getElementById('sid');
+    const ansInp = document.getElementById('ans1');
+    const downloadBtn = document.getElementById('downloadExamBtn');
+    const status = document.getElementById('status');
+
+    const instructionsBtn = document.getElementById('instructionsBtn');
+    const modal = document.getElementById('instructionsModal');
+    const closeModal = document.getElementById('closeModal');
+
+    function metaValid() {
+      return clsInp.value && nameInp.value && /^\d+$/.test(sidInp.value);
+    }
+
+    function autoSave(e) {
+      localStorage.setItem(`${examId}_${e.target.id}`, e.target.value);
+      if (metaValid()) {
+        downloadBtn.disabled = false;
+        status.textContent = '已儲存於 LocalStorage (' + new Date().toLocaleTimeString() + ')';
+      } else {
+        downloadBtn.disabled = true;
+        status.textContent = '請填寫班級／姓名／學號，才可下載';
+      }
+    }
+
+    [clsInp, nameInp, sidInp, ansInp].forEach(el => {
+      const saved = localStorage.getItem(`${examId}_${el.id}`);
+      if (saved) el.value = saved;
+      const eventType = el.tagName === 'SELECT' ? 'change' : 'input';
+      el.addEventListener(eventType, autoSave);
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      const cls = clsInp.value;
+      const name = nameInp.value;
+      const sid = sidInp.value;
+      const ans = ansInp.value.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+      const staticHtml = `<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>Age and Viewing Habits 考卷</title>
+  <style>
+    body { max-width: 800px; margin: 0 auto; font-family: sans-serif; padding: 1rem; }
+    h1 { text-align: center; }
+    .field { margin-bottom: 1rem; }
+    label { display: inline-block; width: 80px; font-weight: bold; }
+    span, p { display: inline-block; width: calc(100% - 90px); margin: 0; }
+  </style>
+</head>
+<body>
+  <h1>Age and Viewing Habits 考卷</h1>
+  <div class="field"><label>班級：</label><span>${cls}</span></div>
+  <div class="field"><label>姓名：</label><span>${name}</span></div>
+  <div class="field"><label>學號：</label><span>${sid}</span></div>
+  <hr>
+  <div class="field"><label>作答區：</label><p>${ans}</p></div>
+</body>
+</html>`;
+      const blob = new Blob([staticHtml], { type: 'text/html' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${cls}_${sid}_${name}.html`;
+      link.click();
+    });
+
+    // 注意事項按鈕與 Modal 邏輯
+    instructionsBtn.addEventListener('click', () => modal.style.display = 'block');
+    closeModal.addEventListener('click', () => modal.style.display = 'none');
+    window.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+  </script>
+</body>
+</html>
