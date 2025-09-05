@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>線上考卷 - 打字練習 Type Practice</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>線上考卷 - 打字練習 Type Practice</title>
+    <link id="theme-css" rel="stylesheet" href="styles.css">
+  </head>
+  <body>
     <div class="container">
       <h1>打字練習 Type Practice</h1>
 
@@ -73,7 +73,7 @@
         <tr><td>z</td><td>z</td><td>z 分數 <br>z-Score</td></tr>
         <tr><td>P(...)</td><td>P(...)</td><td>機率表示法 <br>Probability Notation</td></tr>
       </table>
-      <h3>🔍 LaTeX 常見範例 <br>Common LaTeX Examples</h3>
+      <h3>🔍 LaTeX 常見範例 Common LaTeX Examples</h3>
       <table>
         <tr><th>數學表達 <br>Mathematical Expression</th><th>LaTeX 語法 LaTeX Syntax</th><th>顯示效果 Display</th></tr>
         <tr><td>分數 <br>Fraction</td><td>\frac{1}{2}</td><td>½</td></tr>
@@ -86,7 +86,7 @@
       <p style="color:red; white-space:nowrap;">儘量不要使用 LaTeX 語法，不要貼圖片或手寫公式，最終請按下載檔案，上傳到 ee-class。<br>
         Avoid using LaTeX syntax, images, or handwritten formulas.<br>
          Download the file and upload it to ee-class.</p>
-      <h3>📌 數學算式請用文字方式寫出 <br>Please write mathematical expressions in words</h3>
+      <h3>📌 數學算式請用文字方式寫出 Please write mathematical expressions in words</h3>
       <ol>
         <li>所有變數請用英文拼音（如 x-bar, p-hat, sigma, mu 等）
             <br>Use English notation for all variables (e.g., x-bar, p-hat, sigma, mu, etc.)</li>
@@ -101,5 +101,15 @@
   </div>
 
   <script src="scripts.js"></script>
-</body>
+  <script>
+    // cache-bust 每次載入（部署後可改為版本號或檔名策略）
+    (function(){
+      const link = document.getElementById('theme-css');
+      if (!link) return;
+      const base = link.getAttribute('href').split('?')[0];
+      // 使用檔案最後修改時間或時間戳：這裡用時間戳作為範例
+      link.setAttribute('href', base + '?v=' + new Date().getTime());
+    })();`
+  </script>
+ </body>
 </html>

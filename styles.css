@@ -178,3 +178,10 @@ ul, ol { margin-left: 1.5em; }
     margin: 6px 0;
   }
 }
+
+/* 不換行，超長時允許橫向捲動以避免折行破壞版面 */
+.nowrap {
+  white-space: nowrap;
+  overflow-x: auto;
+  display: block;
+}
