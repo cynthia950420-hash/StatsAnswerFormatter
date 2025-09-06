@@ -41,7 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
         "已儲存於 LocalStorage (" + new Date().toLocaleTimeString() + ")";
     } else {
       downloadBtn.disabled = true;
-      status.textContent = "請填寫班級／姓名／學號，才可下載。 Please fill in your class, name, and student ID before downloading.";
+      status.textContent =
+        "請填寫班級／姓名／學號，才可下載。 Please fill in your class, name, and student ID before downloading.";
     }
   }
 
@@ -89,11 +90,15 @@ document.addEventListener("DOMContentLoaded", () => {
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/\n/g, "<br>");
+    // 取得目前頁面上的 <title> 和 <h1>
+    const pageTitle = document.title;
+    const pageH1 = document.querySelector("h1")?.textContent || "";
+
     const staticHtml = `<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title> 線上考卷 - 打字練習 Type Practice</title>
+  <title>${pageTitle}</title>
   <style>
     body { max-width: 800px; margin: 0 auto; font-family: sans-serif; padding: 1rem; }
     h1 { text-align: center; }
@@ -103,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
   </style>
 </head>
 <body>
-  <h1>打字練習 Type Practice</h1>
+  <h1>${pageH1}</h1>
   <div class="field"><label>班級：</label><span>${cls}</span></div>
   <div class="field"><label>姓名：</label><span>${name}</span></div>
   <div class="field"><label>學號：</label><span>${sid}</span></div>
