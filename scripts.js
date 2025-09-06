@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "已儲存於 LocalStorage (" + new Date().toLocaleTimeString() + ")";
     } else {
       downloadBtn.disabled = true;
-      status.textContent = "請填寫班級／姓名／學號，才可下載";
+      status.textContent = "請填寫班級／姓名／學號，才可下載。 Please fill in your class, name, and student ID before downloading.";
     }
   }
 
