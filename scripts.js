@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>Age and Viewing Habits 考卷</title>
+  <title> 線上考卷 - 打字練習 Type Practice</title>
   <style>
     body { max-width: 800px; margin: 0 auto; font-family: sans-serif; padding: 1rem; }
     h1 { text-align: center; }
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
   </style>
 </head>
 <body>
-  <h1>Age and Viewing Habits 考卷</h1>
+  <h1>打字練習 Type Practice</h1>
   <div class="field"><label>班級：</label><span>${cls}</span></div>
   <div class="field"><label>姓名：</label><span>${name}</span></div>
   <div class="field"><label>學號：</label><span>${sid}</span></div>
