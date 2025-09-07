@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function getClsValue() {
     return clsInp.value === "other"
       ? (clsOther.value || "").trim()
-      : clsInp.value;
+      : clsInp.value.trim();
   }
   function metaValid() {
     return getClsValue() && nameInp.value && /^\d+$/.test(sidInp.value);
@@ -82,45 +82,74 @@ document.addEventListener("DOMContentLoaded", () => {
     autoSave({ target: clsInp });
   });
 
-  downloadBtn.addEventListener("click", () => {
-    const cls = getClsValue();
-    const name = nameInp.value;
-    const sid = sidInp.value;
-    const ans = ansInp.value
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/\n/g, "<br>");
-    // 取得目前頁面上的 <title> 和 <h1>
-    const pageTitle = document.title;
-    const pageH1 = document.querySelector("h1")?.textContent || "";
+  downloadBtn.addEventListener("click", async () => {
+    try {
+      // 使用 trim() 移除前後空白
+      const cls = getClsValue().trim();
+      const name = nameInp.value.trim();
+      const sid = sidInp.value.trim();
+      const ans = ansInp.value;
 
-    const staticHtml = `<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-  <meta charset="UTF-8">
-  <title>${pageTitle}</title>
-  <style>
-    body { max-width: 800px; margin: 0 auto; font-family: sans-serif; padding: 1rem; }
-    h1 { text-align: center; }
-    .field { margin-bottom: 1rem; }
-    label { display: inline-block; width: 80px; font-weight: bold; }
-    span, p { display: inline-block; width: calc(100% - 90px); margin: 0; }
-  </style>
-</head>
-<body>
-  <h1>${pageH1}</h1>
-  <div class="field"><label>班級：</label><span>${cls}</span></div>
-  <div class="field"><label>姓名：</label><span>${name}</span></div>
-  <div class="field"><label>學號：</label><span>${sid}</span></div>
-  <hr>
-  <div class="field"><label>作答區：</label><p>${ans}</p></div>
-</body>
-</html>`;
-    const blob = new Blob([staticHtml], { type: "text/html" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `${cls}_${sid}_${name}.html`;
-    link.click();
+      // 使用 JSZip 建立 DOCX 檔案
+      const zip = new JSZip();
+
+      // 建立主要文件內容
+      const documentXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+  <w:body>
+    <w:p>
+      <w:pPr><w:jc w:val="center"/></w:pPr>
+      <w:r><w:t>${cls}_${sid}_${name}</w:t></w:r>
+    </w:p>
+    ${ans
+      .split("\n")
+      .map(
+        (line) =>
+          `<w:p><w:r><w:t>${line
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")}</w:t></w:r></w:p>`
+      )
+      .join("")}
+  </w:body>
+</w:document>`;
+
+      // 添加必要檔案
+      zip.file("word/document.xml", documentXml);
+      zip.file(
+        "[Content_Types].xml",
+        `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+</Types>`
+      );
+
+      zip.file(
+        "_rels/.rels",
+        `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+</Relationships>`
+      );
+
+      zip.file(
+        "word/_rels/document.xml.rels",
+        `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"></Relationships>`
+      );
+
+      // 產生並下載檔案
+      const content = await zip.generateAsync({ type: "blob" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(content);
+      link.download = `${cls}_${sid}_${name}.docx`;
+      link.click();
+    } catch (error) {
+      console.error("下載失敗:", error);
+      alert("下載失敗：" + error.message);
+    }
   });
 
   // 注意事項按鈕與 Modal 邏輯
