@@ -42,8 +42,8 @@
       </div>
 
       <div class="actions" style="margin-top:2rem;">
-        <button id="instructionsBtn">作答注意事項 Answering Guidelines</button>
-        <button id="downloadExamBtn" disabled>下載 DOCX 考卷（含答案） Download DOCX File (with Solutions)</button>
+  <button id="instructionsBtn">作答注意事項 Answering Guidelines</button>
+  <button id="downloadExamBtn" disabled>下載考卷（含答案） Download Test Paper (with Solutions)</button>
       </div>
       <div class="status" id="status">尚未儲存 Unsaved</div>
 
@@ -104,9 +104,7 @@
   </div>
 
     <!-- 將所有 script 放在 body 底部以確保 DOM 完全載入 -->
-    <script src="https://unpkg.com/docx@7.8.2/build/index.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <!-- 已移除 DOCX 相關 script -->
     <script src="scripts.js"></script>
     <script>
         // cache-bust 每次載入（部署後可改為版本號或檔名策略）
