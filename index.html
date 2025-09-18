@@ -53,7 +53,22 @@
     <div class="modal-content">
       <span class="close-btn" id="closeModal">&times;</span>
       <h2>Express Key Point</h2>
-      <h3>📐 文字描述公式的原則 <br>Principles for Describing Formulas in Words</h3>
+      <h3>✅ 必須遵守的規則 Rules You Must Follow </h3>
+      <ol>
+        <li>所有變數請用英文拼音（如 x-bar, p-hat, sigma, mu 等）
+            <br>Use English notation for all variables (e.g., x-bar, p-hat, sigma, mu, etc.)
+        </li>
+        <li>分數請用 `/` 代表除法；平方根用 `sqrt(...)`
+            <br>Use / to represent division for fractions; use sqrt(...) for square roots
+        </li>
+        <li>所有計算過程都要寫出來（不要直接給出結果）
+            <br>Show all calculation steps (do not give the final result directly)
+        </li>
+      </ol>
+      <p>※備註：<br>
+            大型語言模型(LLM)擅長處理純文字、結構清楚、無特殊顯示效果的格式。<br>
+            若有不確定的數學表示法，可直接向ChatGPT詢問如何將該數學式轉換成為易於LLM讀取的形式。</p>
+      <h3>📐 文字描述公式的原則 Principles for Describing Formulas in Words</h3>
       <table>
         <tr><th>類型 Type</th><th>替代方式 Alternative</th><th>範例 Example</th></tr>
         <tr><td>等號 <br>Equal sign</td><td>用 = 表示 <br>Use = to represent</td><td>mean = 5</td></tr>
@@ -89,17 +104,6 @@
         <tr><td>機率 <br>Probability</td><td>P(0.45 \le \hat{p} \le 0.49)</td><td>P(0.45 ≤ p̂ ≤ 0.49)</td></tr>
       </table>
       <h3>📌 數學算式請用文字方式寫出 Please write mathematical expressions in words</h3>
-      <ol>
-        <li>所有變數請用英文拼音（如 x-bar, p-hat, sigma, mu 等）
-            <br>Use English notation for all variables (e.g., x-bar, p-hat, sigma, mu, etc.)</li>
-        <li>分數請用 `/` 代表除法；平方根用 `sqrt(...)`
-            <br>Use / to represent division for fractions; use sqrt(...) for square roots
-        </li>
-        <li>所有計算過程都要寫出來（不要直接給出結果）
-            <br>Show all calculation steps (do not give the final result directly)
-        </li>
-      </ol>
-      <p>※備註：若有不確定的數學表示法，可直接向ChatGPT詢問如何將該數學式轉換成為易於LLM讀取的形式。</p>
     </div>
   </div>
 
