@@ -8,9 +8,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const downloadBtn = document.getElementById("downloadExamBtn");
   const status = document.getElementById("status");
 
+  // 考試標題相關元素
+  const examTitleSelect = document.getElementById("exam-title");
+  const examTitleCustom = document.getElementById("exam-title-custom");
+  const examTitleDisplay = document.getElementById("exam-title-display");
+
   const instructionsBtn = document.getElementById("instructionsBtn");
   const modal = document.getElementById("instructionsModal");
   const closeModal = document.getElementById("closeModal");
+
+  function getExamTitleValue() {
+    return examTitleSelect.value === "Custom"
+      ? (examTitleCustom.value || "").trim()
+      : examTitleSelect.value.trim();
+  }
 
   function getClsValue() {
     return clsInp.value === "other"
@@ -46,17 +57,39 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // 初始化欄位（含 cls-other）
+  // 初始化欄位（含 cls-other 和 exam-title）
   const savedCls = localStorage.getItem(`${examId}_cls`);
   const savedClsOther = localStorage.getItem(`${examId}_cls-other`);
   const savedName = localStorage.getItem(`${examId}_name`);
   const savedSid = localStorage.getItem(`${examId}_sid`);
   const savedAns = localStorage.getItem(`${examId}_ans1`);
+  const savedExamTitle = localStorage.getItem(`${examId}_exam-title`);
+  const savedExamTitleCustom = localStorage.getItem(
+    `${examId}_exam-title-custom`
+  );
+
   if (savedCls) clsInp.value = savedCls;
   if (savedClsOther && clsOther) clsOther.value = savedClsOther;
   if (savedName) nameInp.value = savedName;
   if (savedSid) sidInp.value = savedSid;
   if (savedAns) ansInp.value = savedAns;
+  if (savedExamTitle) examTitleSelect.value = savedExamTitle;
+  if (savedExamTitleCustom && examTitleCustom)
+    examTitleCustom.value = savedExamTitleCustom;
+
+  // 根據 exam-title 值顯示/隱藏 examTitleCustom 並更新標題
+  function updateExamTitleVisibility() {
+    if (!examTitleCustom || !examTitleDisplay) return;
+    if (examTitleSelect.value === "Custom") {
+      examTitleCustom.classList.remove("hidden");
+      examTitleCustom.focus();
+    } else {
+      examTitleCustom.classList.add("hidden");
+    }
+    // 更新 H1 顯示
+    const titleText = getExamTitleValue() || "考試標題";
+    examTitleDisplay.textContent = titleText;
+  }
 
   // 根據 cls 值顯示/隱藏 clsOther
   function updateClsOtherVisibility() {
@@ -69,9 +102,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
   updateClsOtherVisibility();
+  updateExamTitleVisibility();
 
-  // 綁定事件（包含 clsOther）
-  [clsInp, clsOther, nameInp, sidInp, ansInp].forEach((el) => {
+  // 綁定事件（包含 clsOther 和 exam-title）
+  [
+    clsInp,
+    clsOther,
+    nameInp,
+    sidInp,
+    ansInp,
+    examTitleSelect,
+    examTitleCustom,
+  ].forEach((el) => {
     if (!el) return;
     const eventType = el.tagName === "SELECT" ? "change" : "input";
     el.addEventListener(eventType, autoSave);
@@ -81,12 +123,25 @@ document.addEventListener("DOMContentLoaded", () => {
     updateClsOtherVisibility();
     autoSave({ target: clsInp });
   });
+  // exam-title 額外處理：顯示/隱藏 custom 欄並更新標題
+  examTitleSelect.addEventListener("change", () => {
+    updateExamTitleVisibility();
+    autoSave({ target: examTitleSelect });
+  });
+  // exam-title-custom 額外處理：更新標題顯示
+  if (examTitleCustom) {
+    examTitleCustom.addEventListener("input", () => {
+      updateExamTitleVisibility();
+      autoSave({ target: examTitleCustom });
+    });
+  }
 
   downloadBtn.addEventListener("click", async () => {
     // 下載 HTML 檔案
     const cls = getClsValue().trim();
     const name = nameInp.value.trim();
     const sid = sidInp.value.trim();
+    const examTitle = getExamTitleValue().trim() || "線上考卷";
     // 處理換行與特殊字元
     const ans = ansInp.value
       .replace(/</g, "&lt;")
@@ -96,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>打字練習Type Practice</title>
+  <title>${examTitle}</title>
   <style>
     body { max-width: 800px; margin: 0 auto; font-family: sans-serif; padding: 1rem; }
     h1 { text-align: center; }
@@ -106,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
   </style>
 </head>
 <body>
-  <h1>打字練習Type Practice</h1>
+  <h1>${examTitle}</h1>
   <div class="field"><label>班級：</label><span>${cls}</span></div>
   <div class="field"><label>姓名：</label><span>${name}</span></div>
   <div class="field"><label>學號：</label><span>${sid}</span></div>
