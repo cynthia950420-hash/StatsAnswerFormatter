@@ -3,13 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>線上考卷 - SOCS_S-M ratio</title>
+    <title>線上考卷</title>
     <link id="theme-css" rel="stylesheet" href="styles.css">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdnjs.cloudflare.com;">
 </head>
 <body>
     <div class="container">
-      <h1>SOCS_S-M ratio</h1>
+      <h1>線上考卷</h1>
+
+      <!-- 題目選單 -->
+      <div class="field" style="text-align: center; margin-bottom: 2rem;">
+        <label for="exam-title">題目選單 Questions List：</label>
+        <select id="exam-title" style="font-size: 1.2rem; font-weight: bold;">
+          <option value="Typing Practice">Typing Practice</option>
+          <option value="SOCS_S-M ratio">SOCS_S-M ratio</option>
+          <option value="SOCS_S-M ratio-2">SOCS_S-M ratio-2</option>
+        </select>
+      </div>
 
       <!-- 班級（下拉 + 可輸入 other） -->
       <div class="field">
@@ -31,7 +41,7 @@
         <label for="sid">學號 Student ID：</label>
         <input type="text" id="sid" placeholder="請填寫學號 Enter your student ID" pattern="\d+">
       </div>
-
+        
       <hr>
 
       <div class="field">
